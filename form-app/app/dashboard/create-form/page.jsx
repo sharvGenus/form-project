@@ -11,28 +11,36 @@ export default function CreateFormPage() {
     failureRedirectUrl: '',
   });
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
+    setFieldErrors({});
     setLoading(true);
 
-    const res = await fetch('/api/forms', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    });
+    try {
+      const res = await fetch('/api/forms', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
 
-    const data = await res.json();
-    setLoading(false);
+      const data = await res.json();
+      setLoading(false);
 
-    if (!res.ok) {
-      setError(data.error || 'Failed to create form');
-      return;
+      if (!res.ok) {
+        setError(data.error || 'Failed to create form');
+        setFieldErrors(data.fieldErrors || {});
+        return;
+      }
+
+      router.push(`/dashboard/forms/${data.form.id}`);
+    } catch {
+      setLoading(false);
+      setError('Unable to create form. Please try again.');
     }
-
-    router.push(`/dashboard/forms/${data.form.id}`);
   }
 
   return (
@@ -47,6 +55,9 @@ export default function CreateFormPage() {
             value={form.expectedName}
             onChange={(e) => setForm({ ...form, expectedName: e.target.value })}
           />
+          {fieldErrors.expectedName && (
+            <p className="text-red-600 text-sm mt-1">{fieldErrors.expectedName[0]}</p>
+          )}
         </div>
 
         <div>
@@ -57,6 +68,9 @@ export default function CreateFormPage() {
             value={form.successMessage}
             onChange={(e) => setForm({ ...form, successMessage: e.target.value })}
           />
+          {fieldErrors.successMessage && (
+            <p className="text-red-600 text-sm mt-1">{fieldErrors.successMessage[0]}</p>
+          )}
         </div>
 
         <div>
@@ -67,6 +81,9 @@ export default function CreateFormPage() {
             value={form.failureRedirectUrl}
             onChange={(e) => setForm({ ...form, failureRedirectUrl: e.target.value })}
           />
+          {fieldErrors.failureRedirectUrl && (
+            <p className="text-red-600 text-sm mt-1">{fieldErrors.failureRedirectUrl[0]}</p>
+          )}
         </div>
 
         {error && <p className="text-red-600">{error}</p>}

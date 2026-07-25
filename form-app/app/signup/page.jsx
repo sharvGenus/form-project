@@ -1,55 +1,3 @@
-// 'use client';
-// import { useState } from 'react';
-// import { useRouter } from 'next/navigation';
-
-// export default function SignupPage() {
-//   const router = useRouter();
-//   const [form, setForm] = useState({ name: '', email: '', password: '' });
-//   const [error, setError] = useState('');
-
-//   async function handleSubmit(e) {
-//     e.preventDefault();
-//     const res = await fetch('/api/auth/signup', {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify(form),
-//     });
-//     const data = await res.json();
-//     if (!res.ok) {
-//       setError(data.error);
-//       return;
-//     }
-//     router.push('/login');
-//   }
-
-//   return (
-//     <form onSubmit={handleSubmit} className="max-w-sm mx-auto mt-20 space-y-4">
-//       <h1 className="text-2xl font-bold">Sign Up</h1>
-//       {error && <p className="text-red-500">{error}</p>}
-//       <input
-//         placeholder="Name"
-//         className="border p-2 w-full"
-//         onChange={(e) => setForm({ ...form, name: e.target.value })}
-//       />
-//       <input
-//         placeholder="Email"
-//         type="email"
-//         className="border p-2 w-full"
-//         onChange={(e) => setForm({ ...form, email: e.target.value })}
-//       />
-//       <input
-//         placeholder="Password"
-//         type="password"
-//         className="border p-2 w-full"
-//         onChange={(e) => setForm({ ...form, password: e.target.value })}
-//       />
-//       <button type="submit" className="bg-black text-white px-4 py-2 w-full">
-//         Create Account
-//       </button>
-//     </form>
-//   );
-// }
-
 'use client';
 
 import { useState } from 'react';
@@ -59,11 +7,13 @@ export default function SignupPage() {
   const router = useRouter();
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
+    setFieldErrors({});
     setLoading(true);
 
     try {
@@ -77,6 +27,7 @@ export default function SignupPage() {
 
       if (!res.ok) {
         setError(data.error || 'Something went wrong');
+        setFieldErrors(data.fieldErrors || {});
         return;
       }
 
@@ -173,6 +124,9 @@ export default function SignupPage() {
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                   />
+                  {fieldErrors.name && (
+                    <p className="text-sm text-red-300">{fieldErrors.name[0]}</p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -187,6 +141,9 @@ export default function SignupPage() {
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                   />
+                  {fieldErrors.email && (
+                    <p className="text-sm text-red-300">{fieldErrors.email[0]}</p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -201,6 +158,9 @@ export default function SignupPage() {
                     value={form.password}
                     onChange={(e) => setForm({ ...form, password: e.target.value })}
                   />
+                  {fieldErrors.password && (
+                    <p className="text-sm text-red-300">{fieldErrors.password[0]}</p>
+                  )}
                 </div>
 
                 <button
