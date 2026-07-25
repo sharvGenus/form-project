@@ -54,10 +54,11 @@ export async function POST(request, { params }) {
     }
 
     return NextResponse.json({
-      matched,
-      successMessage: matched ? form.successMessage : null,
-      failureRedirectUrl: matched ? null : form.failureRedirectUrl,
-    });
+  matched,
+  submissionId: submission.id,
+  successMessage: matched ? form.successMessage : null,
+  failureRedirectUrl: matched ? null : form.failureRedirectUrl,
+});
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: 'Failed to submit form' }, { status: 500 });

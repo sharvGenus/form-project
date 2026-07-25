@@ -84,7 +84,6 @@ export default function PublicFormClient({ slug }) {
     }
 
     if (data.matched) {
-      sessionStorage.setItem('successMessage', data.successMessage);
       window.location.href = `/f/${slug}/success`;
     } else {
       window.location.href = data.failureRedirectUrl;
