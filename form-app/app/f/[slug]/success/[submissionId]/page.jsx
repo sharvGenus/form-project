@@ -3,10 +3,28 @@ import { Form, Submission } from '@/models/index.js';
 export default async function SuccessPage({ params }) {
   const { slug, submissionId } = await params;
 
-  const submission = await Submission.findByPk(submissionId);
-  const form = await Form.findOne({ where: { slug, status: 'published' } });
+  const form = await Form.findOne({
+    where: { slug, status: 'published' },
+    attributes: ['id', 'successMessage'],
+  });
 
-  if (!submission || !form || submission.formId !== form.id || !submission.matched) {
+  if (!form) {
+    return (
+      <div className="max-w-xl mx-auto mt-20 p-6 text-center text-red-600">
+        Form not found
+      </div>
+    );
+  }
+
+  const submission = await Submission.findOne({
+    where: {
+      id: submissionId,
+      formId: form.id,
+      matched: true,
+    },
+  });
+
+  if (!submission) {
     return (
       <div className="max-w-xl mx-auto mt-20 p-6 text-center text-red-600">
         Invalid success page

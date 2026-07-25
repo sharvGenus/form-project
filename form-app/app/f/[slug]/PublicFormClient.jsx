@@ -84,7 +84,7 @@ export default function PublicFormClient({ slug }) {
     }
 
     if (data.matched) {
-      window.location.href = `/f/${slug}/success`;
+       window.location.href = `/f/${slug}/success/${data.submissionId}`;
     } else {
       window.location.href = data.failureRedirectUrl;
     }

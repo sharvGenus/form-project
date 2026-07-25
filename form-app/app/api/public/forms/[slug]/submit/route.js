@@ -53,7 +53,7 @@ export async function POST(request, { params }) {
       });
     }
 
-    return NextResponse.json({
+return NextResponse.json({
   matched,
   submissionId: submission.id,
   successMessage: matched ? form.successMessage : null,
