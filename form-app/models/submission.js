@@ -5,7 +5,8 @@ export default (sequelize) => {
   Submission.init({
     id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
     formId: { type: DataTypes.UUID, allowNull: false },
-    enteredName: { type: DataTypes.STRING, allowNull: false },
+    enteredFirstName: { type: DataTypes.STRING, allowNull: false },
+    enteredLastName: { type: DataTypes.STRING, allowNull: false },
     matched: { type: DataTypes.BOOLEAN, allowNull: false },
     ipAddress: { type: DataTypes.STRING },
     userAgent: { type: DataTypes.TEXT },

@@ -8,10 +8,11 @@ export default function EditFormPage() {
   const { id } = useParams();
   const router = useRouter();
   const [form, setForm] = useState({
-    expectedName: '',
-    successMessage: '',
-    failureRedirectUrl: '',
-  });
+  expectedFirstName: '',
+  expectedLastName: '',
+  successMessage: '',
+  failureRedirectUrl: '',
+});
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(true);
@@ -39,10 +40,11 @@ export default function EditFormPage() {
         }
 
         setForm({
-          expectedName: current.expectedName,
-          successMessage: current.successMessage,
-          failureRedirectUrl: current.failureRedirectUrl,
-        });
+  expectedFirstName: current.expectedFirstName,
+  expectedLastName: current.expectedLastName,
+  successMessage: current.successMessage,
+  failureRedirectUrl: current.failureRedirectUrl,
+});
         setLoading(false);
       } catch {
         setError('Unable to load form.');
@@ -123,8 +125,8 @@ export default function EditFormPage() {
             Update live form settings
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-7 text-white/55">
-            Adjust the exact match name, refine the success message, or change the fallback
-            destination without replacing the public form link.
+            Adjust the expected first name and last name, refine the success message, or
+            change the fallback destination without replacing the public form link.
           </p>
         </div>
 
@@ -150,23 +152,70 @@ export default function EditFormPage() {
               </div>
             )}
 
-            <div className="space-y-2">
-              <label htmlFor="expectedName" className="text-sm font-medium text-white/85">
-                Expected Name
-              </label>
-              <p className="text-sm text-white/45">
-                Visitors must enter this value exactly to trigger the success flow.
-              </p>
-              <input
-                id="expectedName"
-                className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder:text-white/30 outline-none transition duration-200 focus:border-cyan-400/60 focus:bg-white/10 focus:ring-4 focus:ring-cyan-400/10"
-                value={form.expectedName}
-                onChange={(e) => setForm({ ...form, expectedName: e.target.value })}
-                placeholder="Enter the exact expected name"
-              />
-              {fieldErrors.expectedName && (
-                <p className="text-sm text-red-300">{fieldErrors.expectedName[0]}</p>
-              )}
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-2">
+                <label
+                  htmlFor="expectedFirstName"
+                  className="text-sm font-medium text-white/85"
+                >
+                  Expected First Name
+                </label>
+
+                <p className="text-sm text-white/45">
+                  Visitors must enter this value exactly to trigger the success flow.
+                </p>
+
+                <input
+                  id="expectedFirstName"
+                  className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder:text-white/30 outline-none transition duration-200 focus:border-cyan-400/60 focus:bg-white/10 focus:ring-4 focus:ring-cyan-400/10"
+                  value={form.expectedFirstName}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      expectedFirstName: e.target.value,
+                    })
+                  }
+                  placeholder="Enter the expected first name"
+                />
+
+                {fieldErrors.expectedFirstName && (
+                  <p className="text-sm text-red-300">
+                    {fieldErrors.expectedFirstName[0]}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label
+                  htmlFor="expectedLastName"
+                  className="text-sm font-medium text-white/85"
+                >
+                  Expected Last Name
+                </label>
+
+                <p className="text-sm text-white/45">
+                  Visitors must enter this value exactly to trigger the success flow.
+                </p>
+
+                <input
+                  id="expectedLastName"
+                  className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder:text-white/30 outline-none transition duration-200 focus:border-cyan-400/60 focus:bg-white/10 focus:ring-4 focus:ring-cyan-400/10"
+                  value={form.expectedLastName}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      expectedLastName: e.target.value,
+                    })
+                  }
+                  placeholder="Enter the expected last name"
+                />
+
+                {fieldErrors.expectedLastName && (
+                  <p className="text-sm text-red-300">
+                    {fieldErrors.expectedLastName[0]}
+                  </p>
+                )}
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -174,7 +223,7 @@ export default function EditFormPage() {
                 Success Message
               </label>
               <p className="text-sm text-white/45">
-                This message appears when the submission passes the exact-name check.
+                This message appears when both the entered first name and last name match the configured values.
               </p>
               <textarea
                 id="successMessage"
@@ -194,7 +243,7 @@ export default function EditFormPage() {
                 Failure Redirect URL
               </label>
               <p className="text-sm text-white/45">
-                Non-matching visitors will be redirected to this destination.
+                Visitors whose first name or last name does not match will be redirected to this destination.
               </p>
               <input
                 id="failureRedirectUrl"
@@ -242,7 +291,7 @@ export default function EditFormPage() {
             <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
               <p className="text-sm font-medium text-white">Exact match rule updates immediately</p>
               <p className="mt-2 text-sm leading-6 text-white/50">
-                New submissions will use the latest expected name after you save.
+                New submissions will use the latest expected first name and last name after you save.
               </p>
             </div>
 

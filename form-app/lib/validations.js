@@ -12,14 +12,39 @@ export const loginSchema = z.object({
 });
 
 export const formSchema = z.object({
-  expectedName: z.string().min(1, 'Expected name is required'),
-  successMessage: z.string().min(1, 'Success message is required'),
-  failureRedirectUrl: z.string().url('Fallback link must be a valid URL'),
+  expectedFirstName: z
+    .string()
+    .trim()
+    .min(1, 'Expected first name is required'),
+
+  expectedLastName: z
+    .string()
+    .trim()
+    .min(1, 'Expected last name is required'),
+
+  successMessage: z
+    .string()
+    .min(1, 'Success message is required'),
+
+  failureRedirectUrl: z
+    .string()
+    .url('Fallback link must be a valid URL'),
 });
 
 export const publicSubmitSchema = z.object({
-  enteredName: z.string().min(1, 'Name is required'),
+  enteredFirstName: z
+    .string()
+    .trim()
+    .min(1, 'First name is required'),
+
+  enteredLastName: z
+    .string()
+    .trim()
+    .min(1, 'Last name is required'),
+
   latitude: z.number().nullable().optional(),
+
   longitude: z.number().nullable().optional(),
+
   accuracy: z.number().nullable().optional(),
 });

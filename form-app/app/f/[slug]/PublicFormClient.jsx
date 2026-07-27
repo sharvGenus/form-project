@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 
 export default function PublicFormClient({ slug }) {
   const [form, setForm] = useState(null);
-  const [enteredName, setEnteredName] = useState('');
+  const [enteredFirstName, setEnteredFirstName] = useState('');
+  const [enteredLastName, setEnteredLastName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
@@ -69,8 +70,8 @@ export default function PublicFormClient({ slug }) {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if (!enteredName.trim()) {
-      setError('Please enter your name.');
+    if (!enteredFirstName.trim() || !enteredLastName.trim()) {
+      setError('Please enter both your first name and last name.');
       return;
     }
 
@@ -84,9 +85,10 @@ export default function PublicFormClient({ slug }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          enteredName: enteredName.trim(),
-          ...locationData,
-        }),
+        enteredFirstName: enteredFirstName.trim(),
+        enteredLastName: enteredLastName.trim(),
+        ...locationData,
+      }),
       });
 
       const data = await res.json();
@@ -146,25 +148,49 @@ export default function PublicFormClient({ slug }) {
         <section className="order-2 rounded-[28px] border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/30 sm:p-8 lg:order-1">
           <p className="text-sm uppercase tracking-[0.22em] text-white/35">Private Access</p>
           <h1 className="mt-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-            Enter your name
+            Enter your details
           </h1>
           <p className="mt-4 max-w-md text-sm leading-7 text-white/55">
-            Complete the form below to continue.
+            Enter your first name and last name to continue.
           </p>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-            <div className="space-y-2">
-              <label htmlFor="enteredName" className="text-sm font-medium text-white/85">
-                Your name
-              </label>
-              <input
-                id="enteredName"
-                className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder:text-white/30 outline-none transition duration-200 focus:border-cyan-400/60 focus:bg-white/10 focus:ring-4 focus:ring-cyan-400/10"
-                placeholder="Type your full name"
-                value={enteredName}
-                onChange={(e) => setEnteredName(e.target.value)}
-                autoComplete="name"
-              />
+            <div className="grid gap-5 md:grid-cols-2">
+              <div className="space-y-2">
+                <label
+                  htmlFor="enteredFirstName"
+                  className="text-sm font-medium text-white/85"
+                >
+                  First Name
+                </label>
+
+                <input
+                  id="enteredFirstName"
+                  className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder:text-white/30 outline-none transition duration-200 focus:border-cyan-400/60 focus:bg-white/10 focus:ring-4 focus:ring-cyan-400/10"
+                  placeholder="Enter your first name"
+                  value={enteredFirstName}
+                  onChange={(e) => setEnteredFirstName(e.target.value)}
+                  autoComplete="given-name"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label
+                  htmlFor="enteredLastName"
+                  className="text-sm font-medium text-white/85"
+                >
+                  Last Name
+                </label>
+
+                <input
+                  id="enteredLastName"
+                  className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder:text-white/30 outline-none transition duration-200 focus:border-cyan-400/60 focus:bg-white/10 focus:ring-4 focus:ring-cyan-400/10"
+                  placeholder="Enter your last name"
+                  value={enteredLastName}
+                  onChange={(e) => setEnteredLastName(e.target.value)}
+                  autoComplete="family-name"
+                />
+              </div>
             </div>
 
             {error && (
@@ -189,7 +215,7 @@ export default function PublicFormClient({ slug }) {
             A quick step before you continue
           </h2>
           <p className="mt-4 max-w-md text-sm leading-7 text-white/55">
-            Enter the requested name and submit once to move forward.
+            Enter your first name and last name, then submit once to continue.
           </p>
 
           <div className="mt-8 space-y-4">
@@ -203,7 +229,7 @@ export default function PublicFormClient({ slug }) {
             <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
               <p className="text-sm font-medium text-white">One clear action</p>
               <p className="mt-2 text-sm leading-6 text-white/50">
-                Enter your name, submit the form, and the next step will open automatically.
+                Enter your first name and last name, submit the form, and the next step will open automatically.
               </p>
             </div>
 

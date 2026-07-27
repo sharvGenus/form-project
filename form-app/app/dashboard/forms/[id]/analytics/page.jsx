@@ -186,8 +186,9 @@ export default function FormAnalyticsPage() {
           </div>
 
           <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4 text-sm leading-7 text-white/50">
-            This view helps you quickly judge whether the expected-name rule is working as intended
-            or whether many visitors are failing the match condition.
+            This view helps you quickly judge whether the expected first name and last name
+            matching rule is working as intended or whether many visitors are failing the
+            match condition.
           </div>
         </div>
 
@@ -199,7 +200,7 @@ export default function FormAnalyticsPage() {
             <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
               <p className="text-sm font-medium text-white">Identity input</p>
               <p className="mt-2 text-sm leading-6 text-white/50">
-                Stores the entered name and whether it matched your configured expected value.
+                Stores the entered first name, last name, and whether both matched your configured values.
               </p>
             </div>
 
@@ -244,7 +245,10 @@ export default function FormAnalyticsPage() {
             <thead>
               <tr className="text-left">
                 <th className="border-b border-white/10 px-4 py-3 text-xs font-medium uppercase tracking-[0.18em] text-white/40">
-                  Name Entered
+                  First Name
+                </th>
+                <th className="border-b border-white/10 px-4 py-3 text-xs font-medium uppercase tracking-[0.18em] text-white/40">
+                  Last Name
                 </th>
                 <th className="border-b border-white/10 px-4 py-3 text-xs font-medium uppercase tracking-[0.18em] text-white/40">
                   Status
@@ -273,7 +277,7 @@ export default function FormAnalyticsPage() {
             <tbody>
               {data.submissions.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="px-4 py-10 text-center text-sm text-white/45">
+                  <td colSpan={9} className="px-4 py-10 text-center text-sm text-white/45">
                     No submissions recorded yet.
                   </td>
                 </tr>
@@ -281,8 +285,11 @@ export default function FormAnalyticsPage() {
                 data.submissions.map((submission) => (
                   <tr key={submission.id} className="transition hover:bg-white/[0.03]">
                     <td className="border-b border-white/5 px-4 py-4 text-sm text-white/85">
-                      {submission.enteredName || '-'}
+                      {submission.enteredFirstName || '-'}
                     </td>
+                  <td className="border-b border-white/5 px-4 py-4 text-sm text-white/85">
+                    {submission.enteredLastName || '-'}
+                  </td>
 
                     <td className="border-b border-white/5 px-4 py-4 text-sm">
                       <span
