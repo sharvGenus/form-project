@@ -1,4 +1,5 @@
 import { Form, Submission } from '@/models/index.js';
+import SuccessMessageClient from './SuccessMessageClient';
 
 export default async function SuccessPage({ params }) {
   const { slug, submissionId } = await params;
@@ -10,8 +11,16 @@ export default async function SuccessPage({ params }) {
 
   if (!form) {
     return (
-      <div className="max-w-xl mx-auto mt-20 p-6 text-center text-red-600">
-        Form not found
+      <div className="min-h-screen bg-[#0b0b0f] px-4 py-16 text-white">
+        <div className="mx-auto max-w-2xl">
+          <div className="rounded-[32px] border border-red-400/20 bg-red-500/10 p-8 text-center shadow-2xl shadow-black/30 sm:p-12">
+            <p className="text-sm uppercase tracking-[0.22em] text-red-200/65">Unavailable</p>
+            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white">Form not found</h1>
+            <p className="mt-4 text-sm leading-7 text-red-100/75">
+              The requested success page could not be loaded.
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -26,16 +35,21 @@ export default async function SuccessPage({ params }) {
 
   if (!submission) {
     return (
-      <div className="max-w-xl mx-auto mt-20 p-6 text-center text-red-600">
-        Invalid success page
+      <div className="min-h-screen bg-[#0b0b0f] px-4 py-16 text-white">
+        <div className="mx-auto max-w-2xl">
+          <div className="rounded-[32px] border border-red-400/20 bg-red-500/10 p-8 text-center shadow-2xl shadow-black/30 sm:p-12">
+            <p className="text-sm uppercase tracking-[0.22em] text-red-200/65">Invalid</p>
+            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white">
+              Invalid success page
+            </h1>
+            <p className="mt-4 text-sm leading-7 text-red-100/75">
+              This success view is not available for the current submission.
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
 
-  return (
-    <div className="max-w-xl mx-auto mt-20 p-6 text-center">
-      <h1 className="text-3xl font-bold mb-4">Message for You</h1>
-      <p className="text-lg">{form.successMessage}</p>
-    </div>
-  );
+  return <SuccessMessageClient message={form.successMessage} />;
 }
