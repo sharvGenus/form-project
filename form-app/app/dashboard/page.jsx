@@ -1,8 +1,15 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
+
+export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
+
+  if (!user) {
+    redirect('/login');
+  }
 
   return (
     <div className="space-y-8">
@@ -14,7 +21,7 @@ export default async function DashboardPage() {
           </div>
 
           <h1 className="mt-5 text-3xl font-semibold tracking-tight sm:text-4xl">
-            Welcome back, {user.name}
+            Welcome back, {user.name ?? 'User'}
           </h1>
 
           <p className="mt-4 max-w-2xl text-sm leading-7 text-white/60 sm:text-base">
@@ -43,7 +50,7 @@ export default async function DashboardPage() {
       <section className="grid gap-4 md:grid-cols-3">
         <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-5">
           <p className="text-sm text-white/45">Signed in as</p>
-          <p className="mt-3 text-lg font-semibold text-white">{user.email}</p>
+          <p className="mt-3 text-lg font-semibold text-white">{user.email ?? 'No email available'}</p>
         </div>
 
         <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-5">
