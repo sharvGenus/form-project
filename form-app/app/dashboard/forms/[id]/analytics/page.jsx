@@ -2,11 +2,13 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
+import SubmissionMap from '@/components/SubmissionMapLoader';
 
 export default function FormAnalyticsPage() {
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
+  const [mapSubmission, setMapSubmission] = useState(null);
 
   useEffect(() => {
     async function loadAnalytics() {
@@ -214,7 +216,8 @@ export default function FormAnalyticsPage() {
             <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
               <p className="text-sm font-medium text-white">Location fields</p>
               <p className="mt-2 text-sm leading-6 text-white/50">
-                Latitude and longitude appear only when that data is captured successfully.
+                Latitude and longitude appear only when that data is captured successfully. Click a
+                coordinate in the table to preview it on a map.
               </p>
             </div>
 
@@ -282,61 +285,110 @@ export default function FormAnalyticsPage() {
                   </td>
                 </tr>
               ) : (
-                data.submissions.map((submission) => (
-                  <tr key={submission.id} className="transition hover:bg-white/[0.03]">
-                    <td className="border-b border-white/5 px-4 py-4 text-sm text-white/85">
-                      {submission.enteredFirstName || '-'}
-                    </td>
-                  <td className="border-b border-white/5 px-4 py-4 text-sm text-white/85">
-                    {submission.enteredLastName || '-'}
-                  </td>
+                data.submissions.map((submission) => {
+                  const hasLocation =
+                    submission.location?.latitude != null &&
+                    submission.location?.longitude != null;
 
-                    <td className="border-b border-white/5 px-4 py-4 text-sm">
-                      <span
+                  return (
+                    <tr key={submission.id} className="transition hover:bg-white/[0.03]">
+                      <td className="border-b border-white/5 px-4 py-4 text-sm text-white/85">
+                        {submission.enteredFirstName || '-'}
+                      </td>
+                      <td className="border-b border-white/5 px-4 py-4 text-sm text-white/85">
+                        {submission.enteredLastName || '-'}
+                      </td>
+
+                      <td className="border-b border-white/5 px-4 py-4 text-sm">
+                        <span
+                          className={
+                            submission.matched
+                              ? 'inline-flex rounded-full border border-emerald-400/20 bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-200'
+                              : 'inline-flex rounded-full border border-red-400/20 bg-red-500/10 px-2.5 py-1 text-xs font-medium text-red-200'
+                          }
+                        >
+                          {submission.matched ? 'Matched' : 'Failed'}
+                        </span>
+                      </td>
+
+                      <td className="border-b border-white/5 px-4 py-4 text-sm text-white/60">
+                        {submission.deviceType || 'Unknown'}
+                      </td>
+                      <td className="border-b border-white/5 px-4 py-4 text-sm text-white/60">
+                        {submission.browser || 'Unknown'}
+                      </td>
+                      <td className="border-b border-white/5 px-4 py-4 text-sm text-white/60">
+                        {submission.os || 'Unknown'}
+                      </td>
+
+                      <td
                         className={
-                          submission.matched
-                            ? 'inline-flex rounded-full border border-emerald-400/20 bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-200'
-                            : 'inline-flex rounded-full border border-red-400/20 bg-red-500/10 px-2.5 py-1 text-xs font-medium text-red-200'
+                          hasLocation
+                            ? 'border-b border-white/5 px-4 py-4 text-sm text-cyan-200 underline-offset-2 hover:underline cursor-pointer'
+                            : 'border-b border-white/5 px-4 py-4 text-sm text-white/60'
                         }
+                        style={{ fontVariantNumeric: 'tabular-nums lining-nums' }}
+                        onClick={() => hasLocation && setMapSubmission(submission)}
                       >
-                        {submission.matched ? 'Matched' : 'Failed'}
-                      </span>
-                    </td>
+                        {submission.location?.latitude ?? '-'}
+                      </td>
 
-                    <td className="border-b border-white/5 px-4 py-4 text-sm text-white/60">
-                      {submission.deviceType || 'Unknown'}
-                    </td>
-                    <td className="border-b border-white/5 px-4 py-4 text-sm text-white/60">
-                      {submission.browser || 'Unknown'}
-                    </td>
-                    <td className="border-b border-white/5 px-4 py-4 text-sm text-white/60">
-                      {submission.os || 'Unknown'}
-                    </td>
+                      <td
+                        className={
+                          hasLocation
+                            ? 'border-b border-white/5 px-4 py-4 text-sm text-cyan-200 underline-offset-2 hover:underline cursor-pointer'
+                            : 'border-b border-white/5 px-4 py-4 text-sm text-white/60'
+                        }
+                        style={{ fontVariantNumeric: 'tabular-nums lining-nums' }}
+                        onClick={() => hasLocation && setMapSubmission(submission)}
+                      >
+                        {submission.location?.longitude ?? '-'}
+                      </td>
 
-                    <td
-                      className="border-b border-white/5 px-4 py-4 text-sm text-white/60"
-                      style={{ fontVariantNumeric: 'tabular-nums lining-nums' }}
-                    >
-                      {submission.location?.latitude ?? '-'}
-                    </td>
-
-                    <td
-                      className="border-b border-white/5 px-4 py-4 text-sm text-white/60"
-                      style={{ fontVariantNumeric: 'tabular-nums lining-nums' }}
-                    >
-                      {submission.location?.longitude ?? '-'}
-                    </td>
-
-                    <td className="border-b border-white/5 px-4 py-4 text-sm text-white/60">
-                      {new Date(submission.createdAt).toLocaleString()}
-                    </td>
-                  </tr>
-                ))
+                      <td className="border-b border-white/5 px-4 py-4 text-sm text-white/60">
+                        {new Date(submission.createdAt).toLocaleString()}
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
         </div>
       </section>
+
+      {mapSubmission && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+          <div className="w-full max-w-4xl rounded-3xl border border-white/10 bg-[#0f1117] p-6 shadow-2xl shadow-black/40">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm uppercase tracking-[0.18em] text-white/35">
+                  Submission Location
+                </p>
+                <h2 className="mt-2 text-lg font-semibold text-white">
+                  {mapSubmission.enteredFirstName || mapSubmission.enteredLastName
+                    ? `${mapSubmission.enteredFirstName || ''} ${mapSubmission.enteredLastName || ''}`.trim()
+                    : 'Unnamed submission'}
+                </h2>
+              </div>
+              <button
+                onClick={() => setMapSubmission(null)}
+                className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-white/70 transition hover:bg-white/10"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="mt-5 rounded-2xl border border-white/10 bg-white/5 p-3">
+              <SubmissionMap
+                latitude={mapSubmission.location?.latitude}
+                longitude={mapSubmission.location?.longitude}
+                label={`${mapSubmission.enteredFirstName || ''} ${mapSubmission.enteredLastName || ''}`.trim()}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
